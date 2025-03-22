@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFT Parking Slot Marketplace</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.1/web3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #27ae60;
+      --light-color: #ecf0f1;
+      --dark-color: #2c3e50;
+      --danger-color: #e74c3c;
+      --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+    }
+    
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--secondary-color);
+    }
+    
+    .wallet-info {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+    
+    main {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .hero {
+      text-align: center;
+      padding: 3rem 0;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    
+    .btn {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn:hover {
+      background-color: #219653;
+    }
+    
+    .tab-container {
+      margin-top: 2rem;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 2rem;
+    }
+    
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .tab.active {
+      border-bottom: 3px solid var(--secondary-color);
+      color: var(--secondary-color);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .marketplace-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .marketplace-heading h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+    
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .search-bar {
+      position: relative;
+    }
+    
+    .search-bar input {
+      padding: 0.5rem 1rem 0.5rem 2.5rem;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      width: 250px;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+    
+    select {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background-color: white;
+    }
+    
+    .parking-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .parking-nft {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .parking-nft:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .nft-image {
+      width: 100%;
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+      background-color: #f0f0f0;
+      position: relative;
+    }
+    
+    .time-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(52, 152, 219, 0.9);
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+    
+    .nft-content {
+      padding: 1rem;
+    }
+    
+    .nft-title {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+    
+    .nft-location {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .nft-id {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 0.7rem;
+    }
+    
+    .nft-price {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    
+    .eth-price {
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+    
+    .buy-btn {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .buy-btn:hover {
+      background-color: #219653;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+    }
+    
+    .close {
+      float: right;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    
+    footer {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    
+    .page-item {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: white;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .page-item.active {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">EZPARK NFT</div>
+      <div class="nav-links">
+        <a href="#marketplace">Marketplace</a>
+        <a href="#auctions">Auctions</a>
+        <a href="#my-nfts">My NFTs</a>
+        <a href="#create">Create</a>
+      </div>
+      <div class="wallet-info">
+        <span>Wallet: </span>
+        <span id="wallet-address">Not connected</span>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Sở hữu bãi đỗ xe số nhanh gọn và minh bạch</h1>
+      <p>Mua, bán, đấu giá chỗ đỗ xe của bạn như NFTs. Bảo mật với công nghệ Blockchain</p>
+      <button id="connect-wallet" class="btn">Connect Wallet</button>
+    </section>
+
+    <div class="tab-container">
+      <div class="tabs">
+        <div class="tab active" data-tab="marketplace">Marketplace</div>
+        <div class="tab" data-tab="auctions">Live Auctions</div>
+        <div class="tab" data-tab="my-nfts">My Parking NFTs</div>
+      </div>
+
+      <div id="marketplace" class="tab-content active">
+        <div class="marketplace-heading">
+          <h1>EZPARK NFT</h1>
+          <div class="filter-controls">
+            <div class="search-bar">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" placeholder="Search parking slots">
+            </div>
+            <select>
+              <option>All Locations</option>
+              <option>Downtown District</option>
+              <option>Business Center</option>
+              <option>Shopping Mall</option>
+              <option>Airport Area</option>
+            </select>
+            <select>
+              <option>Sort by: Latest</option>
+              <option>Price: Low to High</option>
+              <option>Price: High to Low</option>
+              <option>Place: Nearest</option>
+              <option>May be common used</option>
+            </select>
+          </div>
+        </div>
+        <div class="parking-grid" id="marketplace-items">
+          <!-- Parking NFT 1 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">12 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Hanoi Old Quarter - H12</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i> Hoan Kiem Lake Area, Historic District
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: HN-H12-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">0.45 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+          <!-- Parking NFT 2 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">6 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Saigon Central - S09</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i> District 1, Ben Thanh Market Zone
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: SG-S09-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">0.28 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+          <!-- Parking NFT 3 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">24 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Da Nang Coastal - D33</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i>My Khe Beach, Tourism Hub
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: DN-D33-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">0.85 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+          <!-- Parking NFT 4 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">3 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Nha Trang Bay - N17</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i> Tran Phu Beachfront, Coastal District
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: AP-D47-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">0.15 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+          <!-- Parking NFT 5 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">18 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Haiphong Port - P22</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i> Xuan Huong Lake, Central Highlands
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: TC-E12-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">0.67 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+          <!-- Parking NFT 6 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">9 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Dalat Highlands - D48</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i> Memorial Hospital, Staff Section
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: MC-F33-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">0.39 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+          <!-- Parking NFT 7 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">15 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Marina Bay - G05</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i> Waterfront District, VIP Section
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: MB-G05-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">0.72 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+          <!-- Parking NFT 8 -->
+          <div class="parking-nft">
+            <div class="nft-image" style="background-image: url('/api/placeholder/250/200');">
+              <div class="time-badge">36 months</div>
+            </div>
+            <div class="nft-content">
+              <div class="nft-title">Luxury Apartments - H17</div>
+              <div class="nft-location">
+                <i class="fas fa-map-marker-alt"></i> Skyline Residences, Reserved Level
+              </div>
+              <div class="nft-id">
+                <i class="fas fa-hashtag"></i> Parking Spot ID: LA-H17-2025
+              </div>
+              <div class="nft-price">
+                <div class="eth-price">1.25 ETH</div>
+                <button class="buy-btn">Buy Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pagination">
+          <div class="page-item active">1</div>
+          <div class="page-item">2</div>
+          <div class="page-item">3</div>
+          <div class="page-item">4</div>
+          <div class="page-item">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+
+      <div id="auctions" class="tab-content">
+        <h2 class="section-title">Live Auction Parking Slots</h2>
+        <div class="parking-grid" id="auction-items">
+          <!-- Auction items loaded dynamically -->
+        </div>
+      </div>
+
+      <div id="my-nfts" class="tab-content">
+        <h2 class="section-title">Your Parking NFTs</h2>
+        <div class="parking-grid" id="owned-nfts">
+          <!-- User's NFTs loaded dynamically -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Purchase Modal -->
+  <div id="purchase-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-header">
+        <h2>Purchase Parking Slot</h2>
+      </div>
+      <div id="purchase-details">
+        <div class="form-group">
+          <label>Parking Slot:</label>
+          <p id="purchase-slot-name"></p>
+        </div>
+        <div class="form-group">
+          <label>Location:</label>
+          <p id="purchase-slot-location"></p>
+        </div>
+        <div class="form-group">
+          <label>Price:</label>
+          <p id="purchase-slot-price"></p>
+        </div>
+        <div class="form-group">
+          <label>Owner:</label>
+          <p id="purchase-slot-owner"></p>
+        </div>
+        <button id="confirm-purchase" class="btn">Confirm Purchase</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auction Modal -->
+  <div id="auction-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-header">
+        <h2>Bid on Parking Slot</h2>
+      </div>
+      <div id="auction-details">
+        <div class="form-group">
+          <label>Parking Slot:</label>
+          <p id="auction-slot-name"></p>
+        </div>
+        <div class="form-group">
+          <label>Location:</label>
+          <p id="auction-slot-location"></p>
+        </div>
+        <div class="form-group">
+          <label>Current Bid:</label>
+          <p id="auction-current-bid"></p>
+        </div>
+        <div class="auction-timer">
+          Ends in: <span id="auction-time-left">12:34:56</span>
+        </div>
+        <div class="form-group">
+          <label for="bid-amount">Your Bid (ETH):</label>
+          <input type="number" id="bid-amount" class="form-input" step="0.01" min="0">
+        </div>
+        <button id="place-bid" class="btn">Place Bid</button>
+        <div class="bid-history">
+          <h3>Bid History</h3>
+          <div id="bid-history-list">
+            <!-- Bid history items loaded dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- List for Sale Modal -->
+  <div id="list-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-header">
+        <h2>List Parking Slot for Sale</h2>
+      </div>
+      <div id="list-details">
+        <div class="form-group">
+          <label>Parking Slot:</label>
+          <p id="list-slot-name"></p>
+        </div>
+        <div class="form-group">
+          <label for="listing-type">Listing Type:</label>
+          <select id="listing-type" class="form-input">
+            <option value="fixed">Fixed Price</option>
+            <option value="auction">Auction</option>
+          </select>
+        </div>
+        <div id="fixed-price-form">
+          <div class="form-group">
+            <label for="listing-price">Price (ETH):</label>
+            <input type="number" id="listing-price" class="form-input" step="0.01" min="0">
+          </div>
+        </div>
+        <div id="auction-form" style="display: none;">
+          <div class="form-group">
+            <label for="auction-start-price">Starting Price (ETH):</label>
+            <input type="number" id="auction-start-price" class="form-input" step="0.01" min="0">
+          </div>
+          <div class="form-group">
+            <label for="auction-duration">Duration (hours):</label>
+            <input type="number" id="auction-duration" class="form-input" min="1" max="168" value="24">
+          </div>
+        </div>
+        <button id="confirm-listing" class="btn">List for Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create NFT Modal -->
+  <div id="create-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-header">
+        <h2>Create New Parking NFT</h2>
+      </div>
+      <div id="create-details">
+        <div class="form-group">
+          <label for="new-slot-name">Parking Slot Name:</label>
+          <input type="text" id="new-slot-name" class="form-input" placeholder="e.g. Premium Spot A-15">
+        </div>
+        <div class="form-group">
+          <label for="new-slot-location">Location:</label>
+          <input type="text" id="new-slot-location" class="form-input" placeholder="e.g. Downtown Business Center">
+        </div>
+        <div class="form-group">
+          <label for="new-slot-features">Features (comma separated):</label>
+          <input type="text" id="new-slot-features" class="form-input" placeholder="e.g. 24/7 Security, Covered Parking, EV Charging">
+        </div>
+        <div class="form-group">
+          <label for="new-slot-image">Image Upload:</label>
+          <input type="file" id="new-slot-image" class="form-input">
+          <p class="help-text">Max file size: 5MB, Formats: JPG, PNG</p>
+        </div>
+        <div class="form-group">
+          <label>Immediately list for sale?</label>
+          <div class="radio-group">
+            <input type="radio" id="list-yes" name="list-new" value="yes">
+            <label for="list-yes">Yes</label>
+            <input type="radio" id="list-no" name="list-new" value="no" checked>
+            <label for="list-no">No</label>
+          </div>
+        </div>
+        <div id="new-listing-options" style="display: none;">
+          <div class="form-group">
+            <label for="new-listing-type">Listing Type:</label>
+            <select id="new-listing-type" class="form-input">
+              <option value="fixed">Fixed Price</option>
+              <option value="auction">Auction</option>
+            </select>
+          </div>
+          <div id="new-fixed-price-form">
+            <div class="form-group">
+              <label for="new-listing-price">Price (ETH):</label>
+              <input type="number" id="new-listing-price" class="form-input" step="0.01" min="0">
+            </div>
+          </div>
+          <div id="new-auction-form" style="display: none;">
+            <div class="form-group">
+              <label for="new-auction-start-price">Starting Price (ETH):</label>
+              <input type="number" id="new-auction-start-price" class="form-input" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+              <label for="new-auction-duration">Duration (hours):</label>
+              <input type="number" id="new-auction-duration" class="form-input" min="1" max="168" value="24">
+            </div>
+          </div>
+        </div>
+        <button id="confirm-create" class="btn">Create NFT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction Confirmation Modal -->
+  <div id="tx-confirmation-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Transaction Processing</h2>
+      </div>
+      <div id="tx-confirmation-details" class="text-center">
+        <div class="spinner"></div>
+        <p id="tx-status">Processing your transaction...</p>
+        <p id="tx-hash"></p>
+        <button id="close-tx-confirmation" class="btn" style="display: none;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 NFT Parking Marketplace</p>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Contact</a>
+    </div>
+  </footer>
+
+  <script src="nft-parking-script.js"></script>
+  <script>
+    (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92442eefdbdb1385',t:'MTc0MjYzMDcyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+  </script>
+</body>
+</html>
