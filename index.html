@@ -118,7 +118,7 @@
     .tabs {
       display: flex;
       gap: 1rem;
-      border-bottom: 2px solid #ddd;
+      border-bottom: 2px SOLid #ddd;
       margin-bottom: 2rem;
     }
     
@@ -129,7 +129,7 @@
     }
     
     .tab.active {
-      border-bottom: 3px solid var(--secondary-color);
+      border-bottom: 3px SOLid var(--secondary-color);
       color: var(--secondary-color);
     }
     
@@ -166,12 +166,12 @@
     .search-bar input {
       padding: 0.5rem 1rem 0.5rem 2.5rem;
       border-radius: 20px;
-      border: 1px solid #ddd;
+      border: 1px SOLid #ddd;
       width: 250px;
     }
     
     .search-icon {
-      position: absolute;
+      position: abSOLute;
       left: 10px;
       top: 50%;
       transform: translateY(-50%);
@@ -181,7 +181,7 @@
     select {
       padding: 0.5rem;
       border-radius: 5px;
-      border: 1px solid #ddd;
+      border: 1px SOLid #ddd;
       background-color: white;
     }
     
@@ -214,7 +214,7 @@
     }
     
     .time-badge {
-      position: absolute;
+      position: abSOLute;
       top: 10px;
       right: 10px;
       background-color: rgba(52, 152, 219, 0.9);
@@ -254,7 +254,7 @@
       margin-top: 1rem;
     }
     
-    .eth-price {
+    .SOL-price {
       font-weight: bold;
       color: var(--accent-color);
     }
@@ -311,7 +311,7 @@
     .form-input {
       width: 100%;
       padding: 0.5rem;
-      border: 1px solid #ddd;
+      border: 1px SOLid #ddd;
       border-radius: 5px;
     }
     
@@ -418,7 +418,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: HN-H12-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">0.45 ETH</div>
+                <div class="SOL-price">0.45 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -437,7 +437,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: SG-S09-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">0.28 ETH</div>
+                <div class="SOL-price">0.28 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -456,7 +456,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: DN-D33-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">0.85 ETH</div>
+                <div class="SOL-price">0.85 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -475,7 +475,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: AP-D47-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">0.15 ETH</div>
+                <div class="SOL-price">0.15 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -494,7 +494,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: TC-E12-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">0.67 ETH</div>
+                <div class="SOL-price">0.67 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -513,7 +513,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: MC-F33-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">0.39 ETH</div>
+                <div class="SOL-price">0.39 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -532,7 +532,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: MB-G05-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">0.72 ETH</div>
+                <div class="SOL-price">0.72 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -551,7 +551,7 @@
                 <i class="fas fa-hashtag"></i> Parking Spot ID: LA-H17-2025
               </div>
               <div class="nft-price">
-                <div class="eth-price">1.25 ETH</div>
+                <div class="SOL-price">1.25 SOL</div>
                 <button class="buy-btn">Buy Now</button>
               </div>
             </div>
@@ -637,7 +637,7 @@
           Ends in: <span id="auction-time-left">12:34:56</span>
         </div>
         <div class="form-group">
-          <label for="bid-amount">Your Bid (ETH):</label>
+          <label for="bid-amount">Your Bid (SOL):</label>
           <input type="number" id="bid-amount" class="form-input" step="0.01" min="0">
         </div>
         <button id="place-bid" class="btn">Place Bid</button>
@@ -672,13 +672,13 @@
         </div>
         <div id="fixed-price-form">
           <div class="form-group">
-            <label for="listing-price">Price (ETH):</label>
+            <label for="listing-price">Price (SOL):</label>
             <input type="number" id="listing-price" class="form-input" step="0.01" min="0">
           </div>
         </div>
         <div id="auction-form" style="display: none;">
           <div class="form-group">
-            <label for="auction-start-price">Starting Price (ETH):</label>
+            <label for="auction-start-price">Starting Price (SOL):</label>
             <input type="number" id="auction-start-price" class="form-input" step="0.01" min="0">
           </div>
           <div class="form-group">
@@ -735,13 +735,13 @@
           </div>
           <div id="new-fixed-price-form">
             <div class="form-group">
-              <label for="new-listing-price">Price (ETH):</label>
+              <label for="new-listing-price">Price (SOL):</label>
               <input type="number" id="new-listing-price" class="form-input" step="0.01" min="0">
             </div>
           </div>
           <div id="new-auction-form" style="display: none;">
             <div class="form-group">
-              <label for="new-auction-start-price">Starting Price (ETH):</label>
+              <label for="new-auction-start-price">Starting Price (SOL):</label>
               <input type="number" id="new-auction-start-price" class="form-input" step="0.01" min="0">
             </div>
             <div class="form-group">
@@ -782,7 +782,7 @@
 
   <script src="nft-parking-script.js"></script>
   <script>
-    (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92442eefdbdb1385',t:'MTc0MjYzMDcyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+    (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92442eefdbdb1385',t:'MTc0MjYzMDcyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='abSOLute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
   </script>
 </body>
 </html>
